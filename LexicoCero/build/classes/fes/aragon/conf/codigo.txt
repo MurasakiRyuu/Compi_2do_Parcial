@@ -1,0 +1,29 @@
+package fes.aragon.lexico;
+import static fes.aragon.conts.Tokens.*;
+%%
+%class Lexico
+%public
+%type fes.aragon.conts.Tokens
+%line
+%column
+L = [a-zA-Z_]
+D = [0-9]
+WHITE=[ \t\r\n]
+%{
+public String lexema;
+public int linea(){
+    return yyline;
+}
+public int columna(){
+    return yycolumn;
+}
+%}
+%%
+{WHITE} {/*Ignore*/}
+"=" {return ASSIGN;}
+";" {return PC;}
+{L}({L}|{D})* {lexema=yytext(); return ID;}
+{D}+ {lexema=yytext(); return INT;}
+{D}+({L})* {lexema=yytext(); return ERROR;}
+. {return ERROR;}
+
